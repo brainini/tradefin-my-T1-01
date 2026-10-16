@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>바이어 리스크 한눈에</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>:root{--color-bg:#F7F6F3;--color-surface:#FFFFFF;--color-border:#E2E0DB;--color-text:#1C1B19;--color-text-muted:#5E5B55;--color-accent:#1F4E79;--grade-s:#1E7044;--grade-a:#9CC34A;--grade-b:#E8A92A;--grade-c:#B8322A;--font-sans:'Noto Sans KR', sans-serif;--weight-regular:400;--weight-medium:500;--weight-bold:700;--text-xs:12px;--lh-xs:1.5;--text-sm:14px;--lh-sm:1.5;--text-md:16px;--lh-md:1.6;--text-lg:20px;--lh-lg:1.4;--text-xl:28px;--lh-xl:1.3;--text-2xl:40px;--lh-2xl:1.2;--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-6:24px;--space-8:32px;--space-12:48px;--space-16:64px;--radius-sm:4px;--radius-md:8px;--shadow:none;--layout-max:1184px;--border-width:1px;}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--color-bg)}
+body{color:var(--color-text);font-family:var(--font-sans);font-size:var(--text-md);line-height:var(--lh-md);font-weight:var(--weight-regular);word-break:keep-all;overflow-wrap:break-word;padding:var(--space-16) var(--space-12)}
+.wrap{max-width:var(--layout-max);margin:0 auto}
+.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.r{text-align:right}
+.muted{color:var(--color-text-muted)}
+.eyebrow{font-size:var(--text-xs);line-height:var(--lh-xs);font-weight:var(--weight-medium);color:var(--color-text-muted);margin-bottom:var(--space-2)}
+
+.head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:var(--space-4);margin-bottom:var(--space-12)}
+.head h1{font-size:var(--text-xl);line-height:var(--lh-xl);font-weight:var(--weight-bold);color:var(--color-text)}
+.head .sub{font-size:var(--text-sm);line-height:var(--lh-sm);color:var(--color-text-muted);margin-top:var(--space-3)}
+.asof{font-size:var(--text-sm);line-height:var(--lh-sm);color:var(--color-text-muted)}
+.asof b{color:var(--color-text);font-weight:var(--weight-medium)}
+
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:var(--border-width) solid var(--color-border);border-bottom:var(--border-width) solid var(--color-border);margin-bottom:var(--space-12)}
+.kpi{padding:var(--space-6);border-left:var(--border-width) solid var(--color-border);min-width:0}
+.kpi:first-child{border-left:none;padding-left:0}
+.kpi-label{display:flex;align-items:center;gap:var(--space-2);font-size:var(--text-sm);line-height:var(--lh-sm);font-weight:var(--weight-medium);color:var(--color-text-muted)}
+.kpi-num{display:block;overflow:hidden;font-size:var(--text-2xl);line-height:var(--lh-2xl);font-weight:var(--weight-bold);color:var(--color-text);margin-top:var(--space-2)}
+.kpi-num.step-down{font-size:var(--text-xl);line-height:var(--lh-2xl)}
+.kpi-basis{font-size:var(--text-xs);line-height:var(--lh-xs);color:var(--color-text-muted);margin-top:var(--space-2)}
+
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--space-6)}
+.span-12{grid-column:span 12}
+.span-8{grid-column:span 8}
+.span-4{grid-column:span 4}
+.card{background:var(--color-surface);border:var(--border-width) solid var(--color-border);border-radius:var(--radius-md);padding:var(--space-8);min-width:0;box-shadow:var(--shadow)}
+.card h2{font-size:var(--text-lg);line-height:var(--lh-lg);font-weight:var(--weight-bold);color:var(--color-text)}
+.card .desc{font-size:var(--text-sm);line-height:var(--lh-sm);color:var(--color-text-muted);margin-top:var(--space-3);margin-bottom:var(--space-6)}
+
+.badge{display:inline-block;padding:var(--space-1) var(--space-2);border-radius:var(--radius-sm);font-size:var(--text-sm);line-height:var(--lh-sm);font-weight:var(--weight-bold);text-align:center}
+.g-S{background:var(--grade-s);color:var(--color-surface)}
+.g-A{background:var(--grade-a);color:var(--color-text)}
+.g-B{background:var(--grade-b);color:var(--color-text)}
+.g-C{background:var(--grade-c);color:var(--color-surface)}
+.seg-S{fill:var(--grade-s)}
+.seg-A{fill:var(--grade-a)}
+.seg-B{fill:var(--grade-b)}
+.seg-C{fill:var(--grade-c)}
+
+.dist-bar{border-radius:var(--radius-sm);overflow:hidden;line-height:0}
+.dist-bar svg{display:block;width:100%;height:var(--space-6)}
+.legend{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--space-4);margin-top:var(--space-4);list-style:none}
+.legend li{display:flex;align-items:center;gap:var(--space-3);min-width:0}
+.legend .cnt{font-size:var(--text-md);line-height:var(--lh-md);font-weight:var(--weight-bold);color:var(--color-text)}
+.legend .amt{display:block;font-size:var(--text-xs);line-height:var(--lh-xs);color:var(--color-text-muted)}
+
+.slider{border-top:var(--border-width) solid var(--color-border);margin-top:var(--space-6);padding-top:var(--space-6)}
+.slider-row{display:flex;align-items:center;gap:var(--space-4)}
+.slider label{font-size:var(--text-sm);line-height:var(--lh-sm);font-weight:var(--weight-medium);color:var(--color-text);white-space:nowrap}
+.slider input{flex:1;min-width:0;accent-color:var(--color-accent)}
+.slider output{font-size:var(--text-lg);line-height:var(--lh-lg);font-weight:var(--weight-bold);color:var(--color-accent)}
+.ticks{display:flex;justify-content:space-between;font-size:var(--text-xs);line-height:var(--lh-xs);color:var(--color-text-muted);margin-top:var(--space-1)}
+.delta{font-size:var(--text-sm);line-height:var(--lh-sm);color:var(--color-text);margin-top:var(--space-4)}
+.delta b{color:var(--color-accent);font-weight:var(--weight-bold)}
+.rule{font-size:var(--text-xs);line-height:var(--lh-xs);color:var(--color-text-muted);margin-top:var(--space-2)}
+
+table{width:100%;border-collapse:collapse;font-size:var(--text-sm);line-height:var(--lh-sm)}
+th{font-weight:var(--weight-medium);color:var(--color-text-muted);text-align:left;padding:var(--space-3) var(--space-2);border-bottom:var(--border-width) solid var(--color-border)}
+td{color:var(--color-text);padding:var(--space-3) var(--space-2);border-bottom:var(--border-width) solid var(--color-border);vertical-align:top}
+th:first-child,td:first-child{padding-left:0}
+th:last-child,td:last-child{padding-right:0}
+th.r,td.r{text-align:right}
+td.name{font-weight:var(--weight-medium)}
+td.sig{color:var(--color-text-muted)}
+.top-cards{display:none;list-style:none;gap:var(--space-4)}
+.bcard{border:var(--border-width) solid var(--color-border);border-radius:var(--radius-md);padding:var(--space-4);background:var(--color-surface)}
+.bcard-top{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--space-3)}
+.bcard-name{font-size:var(--text-md);line-height:var(--lh-md);font-weight:var(--weight-bold);color:var(--color-text)}
+.bcard-meta{font-size:var(--text-sm);line-height:var(--lh-sm);color:var(--color-text-muted);margin-top:var(--space-1)}
+.bcard dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-3);margin-top:var(--space-3)}
+.bcard dt{font-size:var(--text-xs);line-height:var(--lh-xs);color:var(--color-text-muted)}
+.bcard dd{font-size:var(--text-sm);line-height:var(--lh-sm);font-weight:var(--weight-medium);color:var(--color-text)}
+.bcard-sig{font-size:var(--text-xs);line-height:var(--lh-xs);color:var(--color-text-muted);margin-top:var(--space-3)}
+
+.regions{list-style:none}
+.regions li{padding:var(--space-3) 0;border-bottom:var(--border-width) solid var(--color-border)}
+.regions li:first-child{padding-top:0}
+.reg-top{display:flex;justify-content:space-between;gap:var(--space-3);font-size:var(--text-sm);line-height:var(--lh-sm)}
+.reg-name{font-weight:var(--weight-medium);color:var(--color-text)}
+.reg-total{font-weight:var(--weight-bold);color:var(--color-text)}
+.regions svg{display:block;width:100%;height:var(--space-3);margin-top:var(--space-2)}
+.bar-total{fill:var(--color-border)}
+.bar-c{fill:var(--grade-c)}
+.reg-c{font-size:var(--text-xs);line-height:var(--lh-xs);color:var(--color-text-muted);margin-top:var(--space-1)}
+
+.foot{border-top:var(--border-width) solid var(--color-border);margin-top:var(--space-16);padding-top:var(--space-6);font-size:var(--text-xs);line-height:var(--lh-xs);color:var(--color-text-muted)}
+
+@media (max-width: 720px){
+  body{padding:var(--space-12) var(--space-4)}
+  .head{margin-bottom:var(--space-6)}
+  .kpis{grid-template-columns:minmax(0,1fr)}
+  .kpi{border-left:none;border-top:var(--border-width) solid var(--color-border);padding:var(--space-4) 0}
+  .kpi:first-child{border-top:none}
+  .kpi-num{font-size:var(--text-xl);line-height:var(--lh-xl)}
+  .kpi-num.step-down{font-size:var(--text-lg);line-height:var(--lh-xl)}
+  .grid{grid-template-columns:minmax(0,1fr);gap:var(--space-4)}
+  .span-12,.span-8,.span-4{grid-column:1 / -1}
+  .card{padding:var(--space-4)}
+  .legend{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .top-table{display:none}
+  .top-cards{display:grid}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="head">
+  <div>
+    <div class="eyebrow">채권관리팀 · 주간 점검</div>
+    <h1>바이어 리스크 한눈에</h1>
+    <p class="sub">(가상) 한빛정밀(주) 바이어 150곳 · 합성 데이터</p>
+  </div>
+  <p class="asof">기준일 <b class="num">2026-09-30</b></p>
+</header>
+
+<section class="kpis" aria-label="핵심 숫자">
+  <div class="kpi">
+    <div class="kpi-label">위험 바이어 <span class="badge g-C">C</span></div>
+    <span class="kpi-num num fit" id="kpi-c-count">17곳</span>
+    <div class="kpi-basis" id="kpi-line">150곳 중 · 위험 선 17% 기준</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">C등급 채권</div>
+    <span class="kpi-num num fit" id="kpi-c-ar">$1,047,782</span>
+    <div class="kpi-basis" id="kpi-c-share">전체 채권의 24.4%</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">전체 채권</div>
+    <span class="kpi-num num fit">$4,290,904</span>
+    <div class="kpi-basis">150곳 · 미결 채권 합</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">연체 금액</div>
+    <span class="kpi-num num fit">$560,191</span>
+    <div class="kpi-basis">연체가 있는 곳 26곳</div>
+  </div>
+</section>
+<div class="grid">
+
+<section class="card span-12" aria-labelledby="t-dist">
+  <div class="eyebrow">신호등 등급</div>
+  <h2 id="t-dist">등급별 바이어 수와 채권</h2>
+  <p class="desc">막대 길이는 곳 수입니다. 위험 선을 움직이면 등급을 다시 매깁니다.</p>
+  <div class="dist-bar"><svg viewBox="0 0 1000 24" preserveAspectRatio="none" role="img" aria-label="등급별 곳 수 막대"><rect id="seg-S" class="seg-S" x="0.000" y="0" width="840.000" height="24"/><rect id="seg-A" class="seg-A" x="840.000" y="0" width="26.667" height="24"/><rect id="seg-B" class="seg-B" x="866.667" y="0" width="20.000" height="24"/><rect id="seg-C" class="seg-C" x="886.667" y="0" width="113.333" height="24"/></svg></div>
+  <ul class="legend"><li><span class="badge g-S">S</span><span><span class="cnt num" id="lg-cnt-S">126곳</span><span class="amt num" id="lg-ar-S">$2,630,341</span></span></li><li><span class="badge g-A">A</span><span><span class="cnt num" id="lg-cnt-A">4곳</span><span class="amt num" id="lg-ar-A">$144,250</span></span></li><li><span class="badge g-B">B</span><span><span class="cnt num" id="lg-cnt-B">3곳</span><span class="amt num" id="lg-ar-B">$468,531</span></span></li><li><span class="badge g-C">C</span><span><span class="cnt num" id="lg-cnt-C">17곳</span><span class="amt num" id="lg-ar-C">$1,047,782</span></span></li></ul>
+  <div class="slider">
+    <div class="slider-row">
+      <label for="line">위험 선</label>
+      <input type="range" id="line" min="5" max="30" step="1" value="17" autocomplete="off">
+      <output for="line" id="line-val" class="num">17%</output>
+    </div>
+    <div class="ticks num"><span>5%</span><span>30%</span></div>
+    <p class="delta">처음 17%보다 C등급 <b class="num" id="delta-n">+0곳</b> · <b class="num" id="delta-ar">+$0</b></p>
+    <p class="rule">위험 점수가 선 이상이면 C, 선의 절반 이상 B, 선의 4분의 1 이상 A, 나머지 S</p>
+  </div>
+</section>
+
+<section class="card span-8" aria-labelledby="t-top">
+  <div class="eyebrow">이번 주 전화할 곳</div>
+  <h2 id="t-top">위험 상위 10</h2>
+  <p class="desc">위험 점수(30일 내 연체 가능성)가 높은 순입니다. 위험 신호는 확인해 볼 이유입니다.</p>
+  <table class="top-table">
+    <thead><tr><th>바이어</th><th>나라</th><th>등급</th><th class="r">위험 점수</th><th class="r">채권</th><th class="r">연체</th><th>위험 신호</th></tr></thead>
+    <tbody><tr><td class="name">Changzhou Wenant Engineering Co., Ltd.</td><td>중국</td><td><span class="badge js-grade g-C" data-pd="0.7699" aria-label="C등급">C</span></td><td class="r num">77.0%</td><td class="r num">$24,530</td><td class="r num">$24,530</td><td class="sig">최근 1년 분쟁 비율 50%</td></tr><tr><td class="name">Camolin Instrumentación S.A. de C.V.</td><td>멕시코</td><td><span class="badge js-grade g-C" data-pd="0.7092" aria-label="C등급">C</span></td><td class="r num">70.9%</td><td class="r num">$93,460</td><td class="r num">$59,200</td><td class="sig">연체 금액 $59,200</td></tr><tr><td class="name">Tevura Automation Inc.</td><td>미국</td><td><span class="badge js-grade g-C" data-pd="0.7032" aria-label="C등급">C</span></td><td class="r num">70.3%</td><td class="r num">$20,060</td><td class="r num">$20,060</td><td class="sig">지급 지연이 늘어나는 중(+30일)</td></tr><tr><td class="name">Kalaro Industrial S.A. de C.V.</td><td>멕시코</td><td><span class="badge js-grade g-C" data-pd="0.6935" aria-label="C등급">C</span></td><td class="r num">69.3%</td><td class="r num">$70,120</td><td class="r num">$19,200</td><td class="sig">지급 지연이 늘어나는 중(+29일)</td></tr><tr><td class="name">Corost Comercializadora S.A. de C.V.</td><td>멕시코</td><td><span class="badge js-grade g-C" data-pd="0.6739" aria-label="C등급">C</span></td><td class="r num">67.4%</td><td class="r num">$54,540</td><td class="r num">$27,300</td><td class="sig">연체 금액 $27,300</td></tr><tr><td class="name">Galeth Instruments LLC</td><td>미국</td><td><span class="badge js-grade g-C" data-pd="0.5549" aria-label="C등급">C</span></td><td class="r num">55.5%</td><td class="r num">$35,660</td><td class="r num">$18,310</td><td class="sig">연체 금액 $18,310</td></tr><tr><td class="name">Marano Home &amp; Lab Stores FZE</td><td>아랍에미리트</td><td><span class="badge js-grade g-C" data-pd="0.5416" aria-label="C등급">C</span></td><td class="r num">54.2%</td><td class="r num">$80,550</td><td class="r num">$10,610</td><td class="sig">최근 30일 부정적인 뉴스가 많음</td></tr><tr><td class="name">Sarant Ingeniería S.A. de C.V.</td><td>멕시코</td><td><span class="badge js-grade g-C" data-pd="0.4373" aria-label="C등급">C</span></td><td class="r num">43.7%</td><td class="r num">$10,190</td><td class="r num">$10,190</td><td class="sig">연체 금액 $10,190</td></tr><tr><td class="name">PT Sarida Sarana Industri</td><td>인도네시아</td><td><span class="badge js-grade g-C" data-pd="0.4139" aria-label="C등급">C</span></td><td class="r num">41.4%</td><td class="r num">$40,560</td><td class="r num">$4,980</td><td class="sig">지급 지연이 늘어나는 중(+36일)</td></tr><tr><td class="name">Galost Automation Ltd.</td><td>인도</td><td><span class="badge js-grade g-C" data-pd="0.3832" aria-label="C등급">C</span></td><td class="r num">38.3%</td><td class="r num">$48,780</td><td class="r num">$21,910</td><td class="sig">연체 금액 $21,910</td></tr></tbody>
+  </table>
+  <ul class="top-cards"><li class="bcard"><div class="bcard-top"><span class="bcard-name">Changzhou Wenant Engineering Co., Ltd.</span><span class="badge js-grade g-C" data-pd="0.7699" aria-label="C등급">C</span></div><div class="bcard-meta">중국 · 위험 점수 <span class="num">77.0%</span></div><dl><div><dt>채권</dt><dd class="num">$24,530</dd></div><div><dt>연체</dt><dd class="num">$24,530</dd></div></dl><p class="bcard-sig">위험 신호 · 최근 1년 분쟁 비율 50%</p></li><li class="bcard"><div class="bcard-top"><span class="bcard-name">Camolin Instrumentación S.A. de C.V.</span><span class="badge js-grade g-C" data-pd="0.7092" aria-label="C등급">C</span></div><div class="bcard-meta">멕시코 · 위험 점수 <span class="num">70.9%</span></div><dl><div><dt>채권</dt><dd class="num">$93,460</dd></div><div><dt>연체</dt><dd class="num">$59,200</dd></div></dl><p class="bcard-sig">위험 신호 · 연체 금액 $59,200</p></li><li class="bcard"><div class="bcard-top"><span class="bcard-name">Tevura Automation Inc.</span><span class="badge js-grade g-C" data-pd="0.7032" aria-label="C등급">C</span></div><div class="bcard-meta">미국 · 위험 점수 <span class="num">70.3%</span></div><dl><div><dt>채권</dt><dd class="num">$20,060</dd></div><div><dt>연체</dt><dd class="num">$20,060</dd></div></dl><p class="bcard-sig">위험 신호 · 지급 지연이 늘어나는 중(+30일)</p></li><li class="bcard"><div class="bcard-top"><span class="bcard-name">Kalaro Industrial S.A. de C.V.</span><span class="badge js-grade g-C" data-pd="0.6935" aria-label="C등급">C</span></div><div class="bcard-meta">멕시코 · 위험 점수 <span class="num">69.3%</span></div><dl><div><dt>채권</dt><dd class="num">$70,120</dd></div><div><dt>연체</dt><dd class="num">$19,200</dd></div></dl><p class="bcard-sig">위험 신호 · 지급 지연이 늘어나는 중(+29일)</p></li><li class="bcard"><div class="bcard-top"><span class="bcard-name">Corost Comercializadora S.A. de C.V.</span><span class="badge js-grade g-C" data-pd="0.6739" aria-label="C등급">C</span></div><div class="bcard-meta">멕시코 · 위험 점수 <span class="num">67.4%</span></div><dl><div><dt>채권</dt><dd class="num">$54,540</dd></div><div><dt>연체</dt><dd class="num">$27,300</dd></div></dl><p class="bcard-sig">위험 신호 · 연체 금액 $27,300</p></li><li class="bcard"><div class="bcard-top"><span class="bcard-name">Galeth Instruments LLC</span><span class="badge js-grade g-C" data-pd="0.5549" aria-label="C등급">C</span></div><div class="bcard-meta">미국 · 위험 점수 <span class="num">55.5%</span></div><dl><div><dt>채권</dt><dd class="num">$35,660</dd></div><div><dt>연체</dt><dd class="num">$18,310</dd></div></dl><p class="bcard-sig">위험 신호 · 연체 금액 $18,310</p></li><li class="bcard"><div class="bcard-top"><span class="bcard-name">Marano Home &amp; Lab Stores FZE</span><span class="badge js-grade g-C" data-pd="0.5416" aria-label="C등급">C</span></div><div class="bcard-meta">아랍에미리트 · 위험 점수 <span class="num">54.2%</span></div><dl><div><dt>채권</dt><dd class="num">$80,550</dd></div><div><dt>연체</dt><dd class="num">$10,610</dd></div></dl><p class="bcard-sig">위험 신호 · 최근 30일 부정적인 뉴스가 많음</p></li><li class="bcard"><div class="bcard-top"><span class="bcard-name">Sarant Ingeniería S.A. de C.V.</span><span class="badge js-grade g-C" data-pd="0.4373" aria-label="C등급">C</span></div><div class="bcard-meta">멕시코 · 위험 점수 <span class="num">43.7%</span></div><dl><div><dt>채권</dt><dd class="num">$10,190</dd></div><div><dt>연체</dt><dd class="num">$10,190</dd></div></dl><p class="bcard-sig">위험 신호 · 연체 금액 $10,190</p></li><li class="bcard"><div class="bcard-top"><span class="bcard-name">PT Sarida Sarana Industri</span><span class="badge js-grade g-C" data-pd="0.4139" aria-label="C등급">C</span></div><div class="bcard-meta">인도네시아 · 위험 점수 <span class="num">41.4%</span></div><dl><div><dt>채권</dt><dd class="num">$40,560</dd></div><div><dt>연체</dt><dd class="num">$4,980</dd></div></dl><p class="bcard-sig">위험 신호 · 지급 지연이 늘어나는 중(+36일)</p></li><li class="bcard"><div class="bcard-top"><span class="bcard-name">Galost Automation Ltd.</span><span class="badge js-grade g-C" data-pd="0.3832" aria-label="C등급">C</span></div><div class="bcard-meta">인도 · 위험 점수 <span class="num">38.3%</span></div><dl><div><dt>채권</dt><dd class="num">$48,780</dd></div><div><dt>연체</dt><dd class="num">$21,910</dd></div></dl><p class="bcard-sig">위험 신호 · 연체 금액 $21,910</p></li></ul>
+</section>
+
+<section class="card span-4" aria-labelledby="t-reg">
+  <div class="eyebrow">지역별 채권</div>
+  <h2 id="t-reg">돈이 어디에 물려 있나</h2>
+  <p class="desc">회색은 지역 채권 합, 빨강은 그중 지금 C등급인 몫입니다.</p>
+  <ul class="regions"><li><div class="reg-top"><span class="reg-name">동남아·남아</span><span class="reg-total num">$1,319,352</span></div><svg viewBox="0 0 1000 12" preserveAspectRatio="none" aria-hidden="true"><rect class="bar-total" x="0" y="0" width="1000.000" height="12"/><rect id="rc-0" class="bar-c" x="0" y="0" width="67.715" height="12"/></svg><div class="reg-c num" id="rcv-0">지금 C등급 $89,340 · 6.8%</div></li><li><div class="reg-top"><span class="reg-name">동아시아</span><span class="reg-total num">$971,884</span></div><svg viewBox="0 0 1000 12" preserveAspectRatio="none" aria-hidden="true"><rect class="bar-total" x="0" y="0" width="736.637" height="12"/><rect id="rc-1" class="bar-c" x="0" y="0" width="104.295" height="12"/></svg><div class="reg-c num" id="rcv-1">지금 C등급 $137,602 · 14.2%</div></li><li><div class="reg-top"><span class="reg-name">북미·중남미</span><span class="reg-total num">$733,666</span></div><svg viewBox="0 0 1000 12" preserveAspectRatio="none" aria-hidden="true"><rect class="bar-total" x="0" y="0" width="556.081" height="12"/><rect id="rc-2" class="bar-c" x="0" y="0" width="357.486" height="12"/></svg><div class="reg-c num" id="rcv-2">지금 C등급 $471,650 · 64.3%</div></li><li><div class="reg-top"><span class="reg-name">서유럽</span><span class="reg-total num">$543,729</span></div><svg viewBox="0 0 1000 12" preserveAspectRatio="none" aria-hidden="true"><rect class="bar-total" x="0" y="0" width="412.118" height="12"/><rect id="rc-3" class="bar-c" x="0" y="0" width="11.051" height="12"/></svg><div class="reg-c num" id="rcv-3">지금 C등급 $14,580 · 2.7%</div></li><li><div class="reg-top"><span class="reg-name">중동·아프리카</span><span class="reg-total num">$543,680</span></div><svg viewBox="0 0 1000 12" preserveAspectRatio="none" aria-hidden="true"><rect class="bar-total" x="0" y="0" width="412.081" height="12"/><rect id="rc-4" class="bar-c" x="0" y="0" width="221.359" height="12"/></svg><div class="reg-c num" id="rcv-4">지금 C등급 $292,050 · 53.7%</div></li><li><div class="reg-top"><span class="reg-name">중동부유럽</span><span class="reg-total num">$178,593</span></div><svg viewBox="0 0 1000 12" preserveAspectRatio="none" aria-hidden="true"><rect class="bar-total" x="0" y="0" width="135.364" height="12"/><rect id="rc-5" class="bar-c" x="0" y="0" width="32.258" height="12"/></svg><div class="reg-c num" id="rcv-5">지금 C등급 $42,560 · 23.8%</div></li></ul>
+</section>
+</div>
+<footer class="foot">(가상) 합성 데이터 · 기준일 2026-09-30 · 위험 점수는 판단을 돕는 값이고 결정은 사람이 합니다</footer>
+</div>
+<script type="application/json" id="board-data">[{"buyer_id":"B001","buyer_name":"Camano Meettechniek B.V.","country":"네덜란드","region":"서유럽","open_ar_usd":27052,"overdue_usd":0,"pd_30d":0.0089,"signal_1":"최근 6개월 결제의 80%가 늦음"},{"buyer_id":"B002","buyer_name":"Hefei Belum Machinery Co., Ltd.","country":"중국","region":"동아시아","open_ar_usd":10070,"overdue_usd":0,"pd_30d":0.0045,"signal_1":"최근 1년 분쟁 비율 29%"},{"buyer_id":"B003","buyer_name":"PT Delyn Instrumen Nusantara","country":"인도네시아","region":"동남아·남아","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.009,"signal_1":"최근 1년 분쟁 비율 29%"},{"buyer_id":"B004","buyer_name":"Eldum Automation S.A.E.","country":"이집트","region":"중동·아프리카","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0031,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B005","buyer_name":"Xanolin Distribution Co., Ltd.","country":"베트남","region":"동남아·남아","open_ar_usd":346360,"overdue_usd":19920,"pd_30d":0.1483,"signal_1":"최근 6개월 결제의 100%가 늦음"},{"buyer_id":"B006","buyer_name":"Zarum Machinery Sdn. Bhd.","country":"말레이시아","region":"동남아·남아","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0034,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B007","buyer_name":"Quineth Handel B.V.","country":"네덜란드","region":"서유럽","open_ar_usd":3021,"overdue_usd":0,"pd_30d":0.0096,"signal_1":"최근 6개월 결제의 67%가 늦음"},{"buyer_id":"B008","buyer_name":"Uleon Anlagenbau GmbH","country":"독일","region":"서유럽","open_ar_usd":9211,"overdue_usd":7809,"pd_30d":0.3707,"signal_1":"지급 지연이 늘어나는 중(+31일)"},{"buyer_id":"B009","buyer_name":"Suzhou Delaro Supply Co., Ltd.","country":"중국","region":"동아시아","open_ar_usd":57457,"overdue_usd":0,"pd_30d":0.0048,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B010","buyer_name":"Gorion Handel Sp. z o.o.","country":"폴란드","region":"중동부유럽","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.003,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B011","buyer_name":"Fenolin Utilities Ltd.","country":"인도","region":"동남아·남아","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0033,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B012","buyer_name":"PT Varasta Sarana Industri","country":"인도네시아","region":"동남아·남아","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0031,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B013","buyer_name":"Tianjin Wenum Manufacturing Co., Ltd.","country":"중국","region":"동아시아","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0033,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B014","buyer_name":"Briion Projects Corp.","country":"미국","region":"북미·중남미","open_ar_usd":29910,"overdue_usd":0,"pd_30d":0.0031,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B015","buyer_name":"Pelant Automation Co., Ltd.","country":"대만","region":"동아시아","open_ar_usd":7680,"overdue_usd":0,"pd_30d":0.0044,"signal_1":"최근 1년 분쟁 비율 33%"},{"buyer_id":"B016","buyer_name":"Galova Machinery Ltd.","country":"인도","region":"동남아·남아","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0034,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B017","buyer_name":"Corasta Instruments S.A.E.","country":"이집트","region":"중동·아프리카","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0076,"signal_1":"최근 6개월 결제의 100%가 늦음"},{"buyer_id":"B018","buyer_name":"Corari Industrie B.V.","country":"네덜란드","region":"서유럽","open_ar_usd":2531,"overdue_usd":0,"pd_30d":0.004,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B019","buyer_name":"Saryn Machinery Inc.","country":"미국","region":"북미·중남미","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0077,"signal_1":"최근 1년 평균 31일 늦게 지급"},{"buyer_id":"B020","buyer_name":"Velida Machinery Est.","country":"사우디아라비아","region":"중동·아프리카","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0031,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B021","buyer_name":"Xiamen Rinant Engineering Co., Ltd.","country":"중국","region":"동아시아","open_ar_usd":80211,"overdue_usd":0,"pd_30d":0.0044,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B022","buyer_name":"PT Kavrendo Instrumen Nusantara","country":"인도네시아","region":"동남아·남아","open_ar_usd":72360,"overdue_usd":4330,"pd_30d":0.0449,"signal_1":"최근 1년 분쟁 비율 43%"},{"buyer_id":"B023","buyer_name":"PT Morora Teknik Indonesia","country":"인도네시아","region":"동남아·남아","open_ar_usd":22410,"overdue_usd":0,"pd_30d":0.0103,"signal_1":"최근 6개월 결제의 57%가 늦음"},{"buyer_id":"B024","buyer_name":"Praum Outlets Inc.","country":"미국","region":"북미·중남미","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0032,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B025","buyer_name":"Junant Anlagenbau AG","country":"독일","region":"서유럽","open_ar_usd":1562,"overdue_usd":0,"pd_30d":0.0045,"signal_1":"최근 1년 분쟁 비율 25%"},{"buyer_id":"B026","buyer_name":"Nelova Engineering (Thailand) Co., Ltd.","country":"태국","region":"동남아·남아","open_ar_usd":4860,"overdue_usd":0,"pd_30d":0.0037,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B027","buyer_name":"Ralant Water Services Co., Ltd.","country":"베트남","region":"동남아·남아","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.003,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B028","buyer_name":"Davura Kogyo Co., Ltd.","country":"일본","region":"동아시아","open_ar_usd":225799,"overdue_usd":0,"pd_30d":0.0055,"signal_1":"최근 1년 분쟁 비율 25%"},{"buyer_id":"B029","buyer_name":"Dongguan Tarella Engineering Co., Ltd.","country":"중국","region":"동아시아","open_ar_usd":88940,"overdue_usd":0,"pd_30d":0.0111,"signal_1":"지급 지연이 늘어나는 중(+19일)"},{"buyer_id":"B030","buyer_name":"Calaro Endüstriyel Ölçüm A.Ş.","country":"튀르키예","region":"중동부유럽","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0111,"signal_1":"최근 6개월 결제의 60%가 늦음"},{"buyer_id":"B031","buyer_name":"Kalaro Industrial S.A. de C.V.","country":"멕시코","region":"북미·중남미","open_ar_usd":70120,"overdue_usd":19200,"pd_30d":0.6935,"signal_1":"지급 지연이 늘어나는 중(+29일)"},{"buyer_id":"B032","buyer_name":"Nilora Water & Wastewater Authority","country":"이집트","region":"중동·아프리카","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.005,"signal_1":"최근 1년 분쟁 비율 33%"},{"buyer_id":"B033","buyer_name":"Calum Contracting JSC","country":"베트남","region":"동남아·남아","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0033,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B034","buyer_name":"Helvara Humanitarian Supply Agency","country":"독일","region":"서유럽","open_ar_usd":11491,"overdue_usd":0,"pd_30d":0.0052,"signal_1":"최근 1년 분쟁 비율 25%"},{"buyer_id":"B035","buyer_name":"Rinella Distribution Co., Ltd.","country":"대만","region":"동아시아","open_ar_usd":17800,"overdue_usd":0,"pd_30d":0.003,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B036","buyer_name":"Quinano Trading JSC","country":"베트남","region":"동남아·남아","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0031,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B037","buyer_name":"Bexova Industries Est.","country":"사우디아라비아","region":"중동·아프리카","open_ar_usd":14770,"overdue_usd":0,"pd_30d":0.005,"signal_1":"최근 1년 분쟁 비율 27%"},{"buyer_id":"B038","buyer_name":"Varix Anlagenbau GmbH","country":"독일","region":"서유럽","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0031,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B039","buyer_name":"Zaryn Industries Est.","country":"사우디아라비아","region":"중동·아프리카","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0049,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B040","buyer_name":"Loreth Environmental Services Ltd.","country":"인도","region":"동남아·남아","open_ar_usd":49220,"overdue_usd":0,"pd_30d":0.0041,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B041","buyer_name":"Davant Endüstriyel Ölçüm Ltd. Şti.","country":"튀르키예","region":"중동부유럽","open_ar_usd":42560,"overdue_usd":11210,"pd_30d":0.3284,"signal_1":"연체 금액 $11,210"},{"buyer_id":"B042","buyer_name":"Velix Comércio Ltda.","country":"브라질","region":"북미·중남미","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0031,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B043","buyer_name":"Changzhou Bexum Environmental Services Co., Ltd.","country":"중국","region":"동아시아","open_ar_usd":25123,"overdue_usd":0,"pd_30d":0.0048,"signal_1":"최근 1년 분쟁 비율 38%"},{"buyer_id":"B044","buyer_name":"Quinasta Manufacturing (Thailand) Co., Ltd.","country":"태국","region":"동남아·남아","open_ar_usd":13330,"overdue_usd":13330,"pd_30d":0.0532,"signal_1":"최근 1년 평균 263일 늦게 지급"},{"buyer_id":"B045","buyer_name":"Wenora General Trading FZCO","country":"아랍에미리트","region":"중동·아프리카","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0039,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B046","buyer_name":"Interagency Water Relief Office","country":"미국","region":"북미·중남미","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0033,"signal_1":"최근 1년 평균 25일 늦게 지급"},{"buyer_id":"B047","buyer_name":"Corost Comercializadora S.A. de C.V.","country":"멕시코","region":"북미·중남미","open_ar_usd":54540,"overdue_usd":27300,"pd_30d":0.6739,"signal_1":"연체 금액 $27,300"},{"buyer_id":"B048","buyer_name":"Changzhou Wenant Engineering Co., Ltd.","country":"중국","region":"동아시아","open_ar_usd":24530,"overdue_usd":24530,"pd_30d":0.7699,"signal_1":"최근 1년 분쟁 비율 50%"},{"buyer_id":"B049","buyer_name":"Lumasta Engineering LLC","country":"아랍에미리트","region":"중동·아프리카","open_ar_usd":50700,"overdue_usd":2820,"pd_30d":0.0328,"signal_1":"최근 6개월 결제의 100%가 늦음"},{"buyer_id":"B050","buyer_name":"Korolin Instruments LLC","country":"미국","region":"북미·중남미","open_ar_usd":70360,"overdue_usd":0,"pd_30d":0.0103,"signal_1":"최근 6개월 결제의 79%가 늦음"},{"buyer_id":"B051","buyer_name":"Dorora Engineering Inc.","country":"미국","region":"북미·중남미","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0078,"signal_1":"지급 지연이 늘어나는 중(+13일)"},{"buyer_id":"B052","buyer_name":"Mekora Water Infrastructure PMU","country":"베트남","region":"동남아·남아","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.003,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B053","buyer_name":"Davix Industrietechnik AG","country":"독일","region":"서유럽","open_ar_usd":81567,"overdue_usd":0,"pd_30d":0.013,"signal_1":"최근 30일 부정적인 뉴스가 많음"},{"buyer_id":"B054","buyer_name":"Waterschap Velmar-Oost","country":"네덜란드","region":"서유럽","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0089,"signal_1":"최근 1년 분쟁 비율 40%"},{"buyer_id":"B055","buyer_name":"Tulvarra Water Services LLC","country":"미국","region":"북미·중남미","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0057,"signal_1":"최근 1년 평균 60일 늦게 지급"},{"buyer_id":"B056","buyer_name":"Quinari Instruments Inc.","country":"미국","region":"북미·중남미","open_ar_usd":50380,"overdue_usd":0,"pd_30d":0.0106,"signal_1":"지급 지연이 늘어나는 중(+6일)"},{"buyer_id":"B057","buyer_name":"Calant Projects Co., Ltd.","country":"베트남","region":"동남아·남아","open_ar_usd":137350,"overdue_usd":0,"pd_30d":0.0055,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B058","buyer_name":"Jemsolka Supply Sdn. Bhd.","country":"말레이시아","region":"동남아·남아","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0053,"signal_1":"최근 1년 분쟁 비율 29%"},{"buyer_id":"B059","buyer_name":"PT Sarida Sarana Industri","country":"인도네시아","region":"동남아·남아","open_ar_usd":40560,"overdue_usd":4980,"pd_30d":0.4139,"signal_1":"지급 지연이 늘어나는 중(+36일)"},{"buyer_id":"B060","buyer_name":"PT Korida Instrumen Nusantara","country":"인도네시아","region":"동남아·남아","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0034,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B061","buyer_name":"Ulia Projects Pvt. Ltd.","country":"인도","region":"동남아·남아","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0033,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B062","buyer_name":"Galeth Instruments LLC","country":"미국","region":"북미·중남미","open_ar_usd":35660,"overdue_usd":18310,"pd_30d":0.5549,"signal_1":"연체 금액 $18,310"},{"buyer_id":"B063","buyer_name":"Tianjin Corolin Outlets Co., Ltd.","country":"중국","region":"동아시아","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.003,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B064","buyer_name":"Belost Trading Inc.","country":"미국","region":"북미·중남미","open_ar_usd":27216,"overdue_usd":0,"pd_30d":0.0032,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B065","buyer_name":"Indavara Rural Water Programme PIU","country":"인도","region":"동남아·남아","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0032,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B066","buyer_name":"Marano Home & Lab Stores FZE","country":"아랍에미리트","region":"중동·아프리카","open_ar_usd":80550,"overdue_usd":10610,"pd_30d":0.5416,"signal_1":"최근 30일 부정적인 뉴스가 많음"},{"buyer_id":"B067","buyer_name":"Briano Instrumentação S.A.","country":"브라질","region":"북미·중남미","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0033,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B068","buyer_name":"Belion Automation (Thailand) Co., Ltd.","country":"태국","region":"동남아·남아","open_ar_usd":118530,"overdue_usd":0,"pd_30d":0.0184,"signal_1":"최근 6개월 결제의 86%가 늦음"},{"buyer_id":"B069","buyer_name":"Vasbrelko Machinery LLC","country":"아랍에미리트","region":"중동·아프리카","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.003,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B070","buyer_name":"Tarolin Przemysł Sp. z o.o.","country":"폴란드","region":"중동부유럽","open_ar_usd":8413,"overdue_usd":0,"pd_30d":0.0032,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B071","buyer_name":"Briost Engineering Co., Ltd.","country":"대만","region":"동아시아","open_ar_usd":65000,"overdue_usd":65000,"pd_30d":0.0946,"signal_1":"연체 금액 $65,000"},{"buyer_id":"B072","buyer_name":"Halano Handelsgesellschaft GmbH","country":"독일","region":"서유럽","open_ar_usd":9679,"overdue_usd":0,"pd_30d":0.013,"signal_1":"지급 지연이 늘어나는 중(+16일)"},{"buyer_id":"B073","buyer_name":"Praix Industrial Ltda.","country":"브라질","region":"북미·중남미","open_ar_usd":48270,"overdue_usd":48270,"pd_30d":0.3354,"signal_1":"연체 금액 $48,270"},{"buyer_id":"B074","buyer_name":"Corant Projects Sdn. Bhd.","country":"말레이시아","region":"동남아·남아","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0067,"signal_1":"최근 1년 평균 22일 늦게 지급"},{"buyer_id":"B075","buyer_name":"Tovera Messtechnik GmbH","country":"독일","region":"서유럽","open_ar_usd":5369,"overdue_usd":5369,"pd_30d":0.2615,"signal_1":"지급 지연이 늘어나는 중(+60일)"},{"buyer_id":"B076","buyer_name":"Dorura Handel Sp. z o.o.","country":"폴란드","region":"중동부유럽","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0062,"signal_1":"최근 1년 분쟁 비율 75%"},{"buyer_id":"B077","buyer_name":"Briari Contracting JSC","country":"베트남","region":"동남아·남아","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0033,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B078","buyer_name":"Kalost Manufacturing Co., Ltd.","country":"베트남","region":"동남아·남아","open_ar_usd":7882,"overdue_usd":0,"pd_30d":0.0088,"signal_1":"최근 1년 평균 28일 늦게 지급"},{"buyer_id":"B079","buyer_name":"Nelera Kogyo Co., Ltd.","country":"일본","region":"동아시아","open_ar_usd":43358,"overdue_usd":0,"pd_30d":0.0032,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B080","buyer_name":"Lorida Shoji K.K.","country":"일본","region":"동아시아","open_ar_usd":20034,"overdue_usd":0,"pd_30d":0.0062,"signal_1":"최근 1년 분쟁 비율 43%"},{"buyer_id":"B081","buyer_name":"Marida Keisoku Co., Ltd.","country":"일본","region":"동아시아","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0032,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B082","buyer_name":"Tesvirel Keisoku K.K.","country":"일본","region":"동아시아","open_ar_usd":41640,"overdue_usd":0,"pd_30d":0.006,"signal_1":"지급 지연이 늘어나는 중(+9일)"},{"buyer_id":"B083","buyer_name":"Oroari Industries LLC","country":"미국","region":"북미·중남미","open_ar_usd":2200,"overdue_usd":2200,"pd_30d":0.0416,"signal_1":"가장 오래된 미결이 305일째"},{"buyer_id":"B084","buyer_name":"Korari Handel Sp. z o.o.","country":"폴란드","region":"중동부유럽","open_ar_usd":39889,"overdue_usd":0,"pd_30d":0.0107,"signal_1":"최근 1년 분쟁 비율 38%"},{"buyer_id":"B085","buyer_name":"Corida Trading LLC","country":"아랍에미리트","region":"중동·아프리카","open_ar_usd":211500,"overdue_usd":40500,"pd_30d":0.1734,"signal_1":"연체 금액 $40,500"},{"buyer_id":"B086","buyer_name":"Oroasta Handelsgesellschaft AG","country":"독일","region":"서유럽","open_ar_usd":188197,"overdue_usd":0,"pd_30d":0.0045,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B087","buyer_name":"Yorura Outlets Corp.","country":"대만","region":"동아시아","open_ar_usd":113072,"overdue_usd":49855,"pd_30d":0.202,"signal_1":"연체 금액 $49,855"},{"buyer_id":"B088","buyer_name":"Tareon Contracting LLC","country":"미국","region":"북미·중남미","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.003,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B089","buyer_name":"Morost Automation Ltd","country":"나이지리아","region":"중동·아프리카","open_ar_usd":760,"overdue_usd":0,"pd_30d":0.0034,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B090","buyer_name":"Calova Automation Inc.","country":"미국","region":"북미·중남미","open_ar_usd":7550,"overdue_usd":0,"pd_30d":0.0033,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B091","buyer_name":"Lorion Handel B.V.","country":"네덜란드","region":"서유럽","open_ar_usd":4583,"overdue_usd":0,"pd_30d":0.0039,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B092","buyer_name":"Eldolin Przemysł Sp. z o.o.","country":"폴란드","region":"중동부유럽","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0033,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B093","buyer_name":"Orunde State Water Board","country":"나이지리아","region":"중동·아프리카","open_ar_usd":88060,"overdue_usd":0,"pd_30d":0.0127,"signal_1":"지급 지연이 늘어나는 중(+20일)"},{"buyer_id":"B094","buyer_name":"Korora Manufacturing Co., Ltd.","country":"베트남","region":"동남아·남아","open_ar_usd":13030,"overdue_usd":0,"pd_30d":0.0031,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B095","buyer_name":"Bexura Industries S.A.E.","country":"이집트","region":"중동·아프리카","open_ar_usd":9150,"overdue_usd":0,"pd_30d":0.0076,"signal_1":"최근 6개월 결제의 100%가 늦음"},{"buyer_id":"B096","buyer_name":"Marova Trading Inc.","country":"미국","region":"북미·중남미","open_ar_usd":25450,"overdue_usd":0,"pd_30d":0.0041,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B097","buyer_name":"Tahrava Water Authority","country":"사우디아라비아","region":"중동·아프리카","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0031,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B098","buyer_name":"Zenyn Outlets Ltd.","country":"인도","region":"동남아·남아","open_ar_usd":70150,"overdue_usd":0,"pd_30d":0.0094,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B099","buyer_name":"Helura Endüstriyel Ölçüm Ltd. Şti.","country":"튀르키예","region":"중동부유럽","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0029,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B100","buyer_name":"Falella Manufacturing (Thailand) Co., Ltd.","country":"태국","region":"동남아·남아","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0031,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B101","buyer_name":"Goraro Engineering Pvt. Ltd.","country":"인도","region":"동남아·남아","open_ar_usd":50800,"overdue_usd":0,"pd_30d":0.014,"signal_1":"최근 6개월 결제의 100%가 늦음"},{"buyer_id":"B102","buyer_name":"Kalant Machinery plc","country":"영국","region":"서유럽","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0046,"signal_1":"최근 1년 평균 44일 늦게 지급"},{"buyer_id":"B103","buyer_name":"Teveth Distribution Co.","country":"사우디아라비아","region":"중동·아프리카","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0033,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B104","buyer_name":"Sarant Ingeniería S.A. de C.V.","country":"멕시코","region":"북미·중남미","open_ar_usd":10190,"overdue_usd":10190,"pd_30d":0.4373,"signal_1":"연체 금액 $10,190"},{"buyer_id":"B105","buyer_name":"Zenano Shoji K.K.","country":"일본","region":"동아시아","open_ar_usd":23400,"overdue_usd":0,"pd_30d":0.0107,"signal_1":"최근 1년 분쟁 비율 56%"},{"buyer_id":"B106","buyer_name":"Ivoari Makina Ltd. Şti.","country":"튀르키예","region":"중동부유럽","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0035,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B107","buyer_name":"Gemvelund Anlagenbau GmbH","country":"독일","region":"서유럽","open_ar_usd":35180,"overdue_usd":0,"pd_30d":0.0057,"signal_1":"최근 1년 평균 24일 늦게 지급"},{"buyer_id":"B108","buyer_name":"Nelella Distribution JSC","country":"베트남","region":"동남아·남아","open_ar_usd":98060,"overdue_usd":0,"pd_30d":0.0049,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B109","buyer_name":"Ralova Home & Lab Stores Co., Ltd.","country":"베트남","region":"동남아·남아","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.003,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B110","buyer_name":"Dorova Trading Corp.","country":"미국","region":"북미·중남미","open_ar_usd":24020,"overdue_usd":0,"pd_30d":0.0071,"signal_1":"최근 1년 평균 21일 늦게 지급"},{"buyer_id":"B111","buyer_name":"Kervuvar Retail Co., Ltd.","country":"대만","region":"동아시아","open_ar_usd":32470,"overdue_usd":0,"pd_30d":0.0032,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B112","buyer_name":"Morasta Industrial S.A. de C.V.","country":"멕시코","region":"북미·중남미","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.003,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B113","buyer_name":"Ralora Kogyo K.K.","country":"일본","region":"동아시아","open_ar_usd":9015,"overdue_usd":0,"pd_30d":0.0031,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B114","buyer_name":"Quinera Keisoku Co., Ltd.","country":"일본","region":"동아시아","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0039,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B115","buyer_name":"Shenzhen Quinida Contracting Co., Ltd.","country":"중국","region":"동아시아","open_ar_usd":11608,"overdue_usd":0,"pd_30d":0.0042,"signal_1":"지급 지연이 늘어나는 중(+4일)"},{"buyer_id":"B116","buyer_name":"Halera Instruments Ltd","country":"영국","region":"서유럽","open_ar_usd":1590,"overdue_usd":0,"pd_30d":0.004,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B117","buyer_name":"Shenzhen Velari Machinery Co., Ltd.","country":"중국","region":"동아시아","open_ar_usd":13050,"overdue_usd":0,"pd_30d":0.0046,"signal_1":"최근 1년 분쟁 비율 25%"},{"buyer_id":"B118","buyer_name":"Tevura Automation Inc.","country":"미국","region":"북미·중남미","open_ar_usd":20060,"overdue_usd":20060,"pd_30d":0.7032,"signal_1":"지급 지연이 늘어나는 중(+30일)"},{"buyer_id":"B119","buyer_name":"Galost Automation Ltd.","country":"인도","region":"동남아·남아","open_ar_usd":48780,"overdue_usd":21910,"pd_30d":0.3832,"signal_1":"연체 금액 $21,910"},{"buyer_id":"B120","buyer_name":"Oroora Sangyo K.K.","country":"일본","region":"동아시아","open_ar_usd":11484,"overdue_usd":0,"pd_30d":0.0049,"signal_1":"최근 1년 분쟁 비율 29%"},{"buyer_id":"B121","buyer_name":"Ulida Outlets Pvt. Ltd.","country":"인도","region":"동남아·남아","open_ar_usd":92040,"overdue_usd":0,"pd_30d":0.0078,"signal_1":"최근 1년 평균 35일 늦게 지급"},{"buyer_id":"B122","buyer_name":"Velova Keisoku K.K.","country":"일본","region":"동아시아","open_ar_usd":13100,"overdue_usd":0,"pd_30d":0.0029,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B123","buyer_name":"Goreth Inżynieria Sp. z o.o.","country":"폴란드","region":"중동부유럽","open_ar_usd":57171,"overdue_usd":14638,"pd_30d":0.1633,"signal_1":"지급 지연이 늘어나는 중(+27일)"},{"buyer_id":"B124","buyer_name":"Dongguan Wenura Automation Co., Ltd.","country":"중국","region":"동아시아","open_ar_usd":17166,"overdue_usd":0,"pd_30d":0.003,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B125","buyer_name":"Zarant Instrumentación S.A. de C.V.","country":"멕시코","region":"북미·중남미","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0034,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B126","buyer_name":"Yoreth Manufacturing Ltd","country":"영국","region":"서유럽","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0037,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B127","buyer_name":"Tevella Automation Co., Ltd.","country":"베트남","region":"동남아·남아","open_ar_usd":80140,"overdue_usd":0,"pd_30d":0.0078,"signal_1":"최근 1년 평균 20일 늦게 지급"},{"buyer_id":"B128","buyer_name":"Briella Manufacturing plc","country":"영국","region":"서유럽","open_ar_usd":82360,"overdue_usd":0,"pd_30d":0.0043,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B129","buyer_name":"Xiamen Xanyn Trading Co., Ltd.","country":"중국","region":"동아시아","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0078,"signal_1":"최근 6개월 결제의 100%가 늦음"},{"buyer_id":"B130","buyer_name":"Marasta Ticaret Ltd. Şti.","country":"튀르키예","region":"중동부유럽","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0035,"signal_1":"최근 30일 부정적인 뉴스가 많음"},{"buyer_id":"B131","buyer_name":"Tarera Automation Nigeria Ltd","country":"나이지리아","region":"중동·아프리카","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0032,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B132","buyer_name":"PT Quineon Instrumen Nusantara","country":"인도네시아","region":"동남아·남아","open_ar_usd":19970,"overdue_usd":0,"pd_30d":0.0049,"signal_1":"최근 1년 분쟁 비율 29%"},{"buyer_id":"B133","buyer_name":"Oroyn Distribution LLC","country":"미국","region":"북미·중남미","open_ar_usd":16360,"overdue_usd":0,"pd_30d":0.0044,"signal_1":"최근 1년 분쟁 비율 25%"},{"buyer_id":"B134","buyer_name":"Camolin Instrumentación S.A. de C.V.","country":"멕시코","region":"북미·중남미","open_ar_usd":93460,"overdue_usd":59200,"pd_30d":0.7092,"signal_1":"연체 금액 $59,200"},{"buyer_id":"B135","buyer_name":"Zarix Ticaret Ltd. Şti.","country":"튀르키예","region":"중동부유럽","open_ar_usd":5520,"overdue_usd":0,"pd_30d":0.0108,"signal_1":"지급 지연이 늘어나는 중(+6일)"},{"buyer_id":"B136","buyer_name":"Xanora Industrietechnik GmbH","country":"독일","region":"서유럽","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0062,"signal_1":"최근 1년 분쟁 비율 50%"},{"buyer_id":"B137","buyer_name":"Ivoion Distribution LLC","country":"아랍에미리트","region":"중동·아프리카","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.007,"signal_1":"최근 6개월 결제의 100%가 늦음"},{"buyer_id":"B138","buyer_name":"Shenzhen Gulvresko Contracting Co., Ltd.","country":"중국","region":"동아시아","open_ar_usd":8911,"overdue_usd":0,"pd_30d":0.0047,"signal_1":"최근 1년 분쟁 비율 29%"},{"buyer_id":"B139","buyer_name":"Varant Handelsgesellschaft AG","country":"독일","region":"서유럽","open_ar_usd":43012,"overdue_usd":0,"pd_30d":0.0044,"signal_1":"최근 1년 분쟁 비율 25%"},{"buyer_id":"B140","buyer_name":"Kalora Machinery LLC","country":"미국","region":"북미·중남미","open_ar_usd":139350,"overdue_usd":23290,"pd_30d":0.2623,"signal_1":"연체 금액 $23,290"},{"buyer_id":"B141","buyer_name":"Briera Messtechnik GmbH","country":"독일","region":"서유럽","open_ar_usd":37324,"overdue_usd":0,"pd_30d":0.0033,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B142","buyer_name":"Peleth Instruments Ltd.","country":"인도","region":"동남아·남아","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0051,"signal_1":"최근 6개월 결제의 100%가 늦음"},{"buyer_id":"B143","buyer_name":"Nelost Industries Sdn. Bhd.","country":"말레이시아","region":"동남아·남아","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0046,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B144","buyer_name":"Camost Ticaret Ltd. Şti.","country":"튀르키예","region":"중동부유럽","open_ar_usd":25040,"overdue_usd":1840,"pd_30d":0.0598,"signal_1":"최근 6개월 결제의 100%가 늦음"},{"buyer_id":"B145","buyer_name":"Varano Home & Lab Stores plc","country":"영국","region":"서유럽","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0069,"signal_1":"최근 6개월 결제의 67%가 늦음"},{"buyer_id":"B146","buyer_name":"Ivoost Industrial Ltda.","country":"브라질","region":"북미·중남미","open_ar_usd":8570,"overdue_usd":0,"pd_30d":0.0031,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B147","buyer_name":"Falia Home & Lab Stores (Thailand) Co., Ltd.","country":"태국","region":"동남아·남아","open_ar_usd":33520,"overdue_usd":33520,"pd_30d":0.063,"signal_1":"가장 오래된 미결이 381일째"},{"buyer_id":"B148","buyer_name":"Rovella Water Services FZE","country":"아랍에미리트","region":"중동·아프리카","open_ar_usd":88190,"overdue_usd":0,"pd_30d":0.0096,"signal_1":"최근 1년 분쟁 비율 32%"},{"buyer_id":"B149","buyer_name":"Changzhou Briasta Distribution Co., Ltd.","country":"중국","region":"동아시아","open_ar_usd":10966,"overdue_usd":0,"pd_30d":0.0031,"signal_1":"눈에 띄는 위험 신호 없음"},{"buyer_id":"B150","buyer_name":"Yorova Machinery plc","country":"영국","region":"서유럽","open_ar_usd":0,"overdue_usd":0,"pd_30d":0.0031,"signal_1":"눈에 띄는 위험 신호 없음"}]</script>
+<script type="application/json" id="region-data">[{"name":"동남아·남아","total":1319352},{"name":"동아시아","total":971884},{"name":"북미·중남미","total":733666},{"name":"서유럽","total":543729},{"name":"중동·아프리카","total":543680},{"name":"중동부유럽","total":178593}]</script>
+<script>
+(function(){
+  var DATA = JSON.parse(document.getElementById('board-data').textContent);
+  var REGIONS = JSON.parse(document.getElementById('region-data').textContent);
+  var BASE = 17, GR = ['S','A','B','C'], W = 1000;
+  var TOTAL = 0; DATA.forEach(function(d){ TOTAL += d.open_ar_usd; });
+  var MAXR = REGIONS.length ? REGIONS[0].total : 1;
+
+  function gradeOf(p, line){
+    if (p >= line) return 'C';
+    if (p >= line / 2) return 'B';
+    if (p >= line / 4) return 'A';
+    return 'S';
+  }
+  function money(v){ return '$' + Math.round(v).toLocaleString('en-US'); }
+  function pct1(part, whole){ return (whole ? (part / whole * 100) : 0).toFixed(1) + '%'; }
+  function stats(pct){
+    var line = pct / 100, c = {S:0,A:0,B:0,C:0}, ar = {S:0,A:0,B:0,C:0}, rc = {};
+    DATA.forEach(function(d){
+      var g = gradeOf(d.pd_30d, line);
+      c[g] += 1; ar[g] += d.open_ar_usd;
+      if (g === 'C') rc[d.region] = (rc[d.region] || 0) + d.open_ar_usd;
+    });
+    return {line: line, count: c, ar: ar, rc: rc};
+  }
+  function setText(id, t){ var el = document.getElementById(id); if (el) el.textContent = t; }
+  var base = stats(BASE);
+
+  function fit(){
+    var els = document.querySelectorAll('.fit');
+    for (var i = 0; i < els.length; i++){
+      els[i].classList.remove('step-down');
+      if (els[i].scrollWidth > els[i].clientWidth) els[i].classList.add('step-down');
+    }
+  }
+
+  function render(pct){
+    var s = stats(pct);
+    setText('line-val', pct + '%');
+    setText('kpi-c-count', s.count.C + '곳');
+    setText('kpi-line', '150곳 중 · 위험 선 ' + pct + '% 기준');
+    setText('kpi-c-ar', money(s.ar.C));
+    setText('kpi-c-share', '전체 채권의 ' + pct1(s.ar.C, TOTAL));
+
+    var x = 0;
+    GR.forEach(function(g){
+      var w = s.count[g] / DATA.length * W;
+      var seg = document.getElementById('seg-' + g);
+      seg.setAttribute('x', x.toFixed(3)); seg.setAttribute('width', w.toFixed(3));
+      x += w;
+      setText('lg-cnt-' + g, s.count[g] + '곳');
+      setText('lg-ar-' + g, money(s.ar[g]));
+    });
+
+    var dn = s.count.C - base.count.C, da = s.ar.C - base.ar.C;
+    setText('delta-n', (dn < 0 ? '-' : '+') + Math.abs(dn) + '곳');
+    setText('delta-ar', (da < 0 ? '-' : '+') + money(Math.abs(da)));
+
+    var badges = document.querySelectorAll('.js-grade');
+    for (var i = 0; i < badges.length; i++){
+      var g = gradeOf(parseFloat(badges[i].getAttribute('data-pd')), s.line);
+      badges[i].textContent = g;
+      badges[i].className = 'badge js-grade g-' + g;
+      badges[i].setAttribute('aria-label', g + '등급');
+    }
+
+    REGIONS.forEach(function(r, i){
+      var v = s.rc[r.name] || 0;
+      document.getElementById('rc-' + i).setAttribute('width', (v / MAXR * W).toFixed(3));
+      setText('rcv-' + i, '지금 C등급 ' + money(v) + ' · ' + pct1(v, r.total));
+    });
+    fit();
+  }
+
+  var slider = document.getElementById('line');
+  slider.addEventListener('input', function(){ render(parseInt(slider.value, 10)); });
+  window.addEventListener('resize', fit);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  render(parseInt(slider.value, 10));
+})();
+</script>
+</body>
+</html>
